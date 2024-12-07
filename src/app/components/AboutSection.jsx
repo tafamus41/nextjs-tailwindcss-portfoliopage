@@ -23,7 +23,7 @@ const TAB_DATA = [
     id: "education",
     content: (
       <ul className="list-disc pl-2">
-        <li>Naval Academy Bachelor's Degree</li>
+        <li>Naval Academy Bachelor&apos;s Degree</li>
         <li>Clarusway IT School, Remote</li>
       </ul>
     ),
