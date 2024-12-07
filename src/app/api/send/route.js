@@ -30,7 +30,6 @@
 
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import ReactDOMServer from "react-dom/server";
 
 // Initialize Resend with the API key from environment variables
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -40,15 +39,17 @@ export async function POST(req) {
   const { email, subject, message } = await req.json();
 
   try {
-    // Convert JSX to a string (HTML) for the email body
-    const htmlContent = ReactDOMServer.renderToStaticMarkup(
-      <>
-        <h1>{subject}</h1>
-        <p>Thank you for contacting us!</p>
-        <p>New message submitted:</p>
-        <p>{message}</p>
-      </>
-    );
+    // Construct the HTML string manually
+    const htmlContent = `
+      <html>
+        <body>
+          <h1>${subject}</h1>
+          <p>Thank you for contacting us!</p>
+          <p>New message submitted:</p>
+          <p>${message}</p>
+        </body>
+      </html>
+    `;
 
     const data = await resend.emails.send({
       from: "Acme <onboarding@resend.dev>", // From email (can be replaced with your verified address)
@@ -60,7 +61,7 @@ export async function POST(req) {
     // Return the response as JSON
     return NextResponse.json(data);
   } catch (error) {
-    console.log("Message failed to send", error);
-    return NextResponse.json({ error: "Failed to send message" });
+    console.error("Message failed to send", error);
+    return NextResponse.json({ error: "Failed to send message" }, { status: 500 });
   }
 }
