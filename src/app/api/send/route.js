@@ -6,7 +6,7 @@ const fromEmail = process.env.FROM_EMAIL;
 
 export async function POST(req, res) {
   const { email, subject, message } = await req.json();
-  // console.log(email, subject, message);
+  console.log(email, subject, message);
   try {
     const data = await resend.emails.send({
       from: "Acme <onboarding@resend.dev>",
@@ -23,6 +23,7 @@ export async function POST(req, res) {
     });
     return NextResponse.json(data);
   } catch (error) {
+    console.log("mesaj gönderilemedi")
     return NextResponse.json({ error });
   }
 }
